@@ -7,14 +7,13 @@ var score;
 var rand;
 var PLAY= 1;
 var END = 0;
+var time = 60;
 var gameState = PLAY;
 var life;
 
 function preload(){
-monkey_running =            loadAnimation("sprite_0.png","sprite_1.png","sprite_3.png","sprite_4.png","sprite_5.png","sprite_6.png","sprite_2.png","sprite_8.png")
-  
+   monkey_running = loadAnimation("sprite_0.png","sprite_1.png","sprite_3.png","sprite_4.png","sprite_5.png","sprite_6.png","sprite_2.png","sprite_8.png")
   monkey_collided = loadAnimation("sprite_7.png");
-  
   bananaImage = loadImage("banana.png");
   obstacleImage = loadImage("obstacle.png");
   backgroundImage = loadImage("jungle.jpg");
@@ -118,27 +117,56 @@ function draw() {
    spawnObstacles();
   
   
-  if (life === 0){
-    gameState = END;
+
   }
-  }
-  else if(gameState===END){
-    background1.velocityX = 0;
-    obstacleGroup.destroyEach();
-    FoodGroup.destroyEach();
-    background1.velocityX= 0;
-    monkey.changeAnimation ("collided",monkey_collided);
-  }
+
+   
   
     monkey.collide(ground);
   
    drawSprites();
+
+   if (life === 0){
+    gameState = END;
+
+  }
+
+  if (time === 0){
+    gameState = END;
+  }
   
   stroke("white");
   textSize(20);
   fill("white");
   text("Score:"+score,500,50);
+
+  if(gameState===END){
+    background1.velocityX = 0;
+    ground.velocityX = 0;
+    obstacleGroup.destroyEach();
+    FoodGroup.destroyEach();
+    monkey.changeAnimation ("collided",monkey_collided);
+    time = 0;
+
+  stroke("red");
+  textSize(40);
+  textAlign(CENTER);
+  fill("red");
+  text("GAME OVER!!!",300,300);
+    
+  }
+
+  if(frameCount%30 === 0){
+     time = time-1
+  }
+  console.log(time);
+  if(time>0){
+  stroke(255);
+  textSize(20);
+  fill(255);
+  text("Time Remaining: "+time+" seconds",100,50);
  }
+}
 
 function spawnFood(){
   if (frameCount%180 == 0){
